@@ -7,7 +7,7 @@ The code in this repository references the MLCF code developed by Dick, Sebastia
 Requires Python version 3.6 or later. Necessary packages are ``ase``, ``pyscf``, ``scipy``, and ``sympy``. 
 
 ## Usage
-All structures are in the `data` folder. Codes can be found in the `model` folder.
+All structures are in the `data` folder. Codes can be found in the `model` folder. Kernels for use in GPR models are in the `kernels` folder.
 
 ### Generate a deformation density
 ```
@@ -15,6 +15,7 @@ python deformation_density.py xyzfile.xyz
 ```
 
 ### Get coefficients from density cube files
+Run the following code in a folder containing one or more .cube files. The basis set can be specified within the script.
 ```
 python get_dens_coeffs.py 
 ```

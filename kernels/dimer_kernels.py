@@ -1,6 +1,7 @@
-# REMOVE COEFFICIENTS FROM LINEAR COMBINATIONS
-
-
+'''
+Kernels modified from dscribe kernels: https://github.com/SINGROUP/dscribe/
+TODO: Need to make the dimer kernel implementation more efficient.
+'''
 from abc import ABC, abstractmethod
 import numpy as np
 from sklearn.metrics.pairwise import pairwise_kernels

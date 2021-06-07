@@ -18,7 +18,6 @@ parser.add_argument('--outputname', type=str, default='output', help='Name of ou
 parser.add_argument('--path', type=str, default=os.getcwd(), help='Path containing cube files.')
 parser.add_argument('--cube_ext', type=str, default='cube', help='Cube file extension.')
 parser.add_argument('--dat_ext', type=str, default='dat', help='Data file extension.')
-start = time.time()
 
 # Modify this basis set for coefficients as needed - currently, all elements have the same number
 # of basis functions
@@ -37,4 +36,7 @@ default_basis = {'r_o_o': 2.5, 'r_i_o': 0.0,
 args = parser.parse_args()
 
 if __name__ == "__main__":
+    start = time.time()
     preprocess_all(args.path, name=args.outputname, basis=default_basis, dens_ext=args.cube_ext, eng_ext=args.dat_ext)
+    total_time = time.time() - start
+    print('Time for processing density coefficients: {:.0f}min {:.2f}sec '.format((total_time / 60), (total_time % 60)))

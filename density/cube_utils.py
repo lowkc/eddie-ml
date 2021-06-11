@@ -125,17 +125,17 @@ def write_single_cube(filename, resolution=0.1, write_cube=True, charge=0):
             comment='Cube_vector {}'.format(box))
 
     
-def dimer_cube_difference(filename, method, resolution=0.1, extension=5.0, charges=[], auto_charges=True, write_cube=False, path=None):
+def dimer_cube_difference(filename, method, resolution=0.1, extension=5.0, charges=None, write_cube=False, path=None):
     '''
     Reads in a dimer XYZ and prints out a .cube file containing
     the electron density difference between the individual monomers and the dimer.
     Choice of HF, MP2, or PBE0 density with a cc-pVTZ basis set.
     The default resolution is set to 0.1 Bohr with a 5.0 Angstrom extension on all sides.
     '''
-    if auto_charges:
+    if charges is None:
         mon1_charge, mon2_charge, tot_charge = get_charges(filename)
     else: 
-        mon1_charge, mon2_charge, tot_charge = charges[0], charges=[1], charges[2]
+        mon1_charge, mon2_charge, tot_charge = charges 
     dimer = dimerxyz_to_Mol(filename, charge=tot_charge)
     mono1 = xyz_to_Mol(filename, n=0, charge=mon1_charge)
     mono2 = xyz_to_Mol(filename, n=1, charge=mon2_charge)

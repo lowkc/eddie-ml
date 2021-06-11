@@ -17,8 +17,7 @@ if __name__ == "__main__":
     if args.custom_dimer:
         mon1_charge, mon2_charge, tot_charge = args.charges
         cube_utils.dimer_cube_difference(args.cube_file, args.method, resolution=args.resolution,
-        extension=args.extension, charges=[mon1_charge, mon2_charge, tot_charge], auto_charges=False,
-        write_cube=True)
+        extension=args.extension, charges=[mon1_charge, mon2_charge, tot_charge], write_cube=True)
     else:
         cube_utils.dimer_cube_difference(args.cube_file, args.method, resolution=args.resolution,
-        extension=args.extension, auto_charges=True, write_cube=True)
+        extension=args.extension, charges=None, write_cube=True)

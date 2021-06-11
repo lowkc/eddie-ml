@@ -4,7 +4,7 @@ This repository contains the code needed to reproduce results in the paper, "Mac
 The code in this repository references the MLCF code developed by Dick, Sebastian, and Marivi Fernandez-Serra in "Learning from the density to correct total energy and forces in first principle simulations." The Journal of Chemical Physics 151.14 (2019): 144102. See: https://github.com/semodi/mlcf to download and for a full list of requirements.
 
 ## Requirements
-Requires Python version 3.6 or later. Necessary packages are ``ase``, ``pyscf``, ``scipy``, and ``sympy``. 
+Requires Python version 3.6 or later. Necessary packages are ``ase``, ``pyscf``, ``dscribe``, ``scipy``, and ``sympy``. 
 
 ## Usage
 All structures are in the `data` folder. Codes can be found in the `model` folder. Kernels for use in GPR models are in the `kernels` folder.

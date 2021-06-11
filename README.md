@@ -15,7 +15,7 @@ python deformation_density.py xyzfile.xyz
 ```
 
 ### Get coefficients from density cube files
-Run the following code in a folder containing one or more .cube files. The basis set can be specified within the script.
+Run the following code in a folder containing one or more .cube files. Basis set parameters such as atom types and radial cutoffs can be specified within the script.
 ```
 python get_dens_coeffs.py 
 ```

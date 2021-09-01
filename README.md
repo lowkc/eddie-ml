@@ -1,5 +1,5 @@
-# Machine learning prediction of long-range intermolecular interaction energy based on electron deformation density
-This repository contains the code needed to reproduce results in the paper, "Machine learning prediction of long-range intermolecular interaction energy based on electron deformation density" (K. Low, M. L. Coote, and E. I. Izgorodina, 2021).
+# Electron deformation density interaction energy machine learning (EDDIE-ML) code
+This repository contains the code needed to reproduce results in the paper, "Machine learning prediction of dimer interaction energies benefits from combining quantum mechnical information with atom-based descriptors" (K. Low, M. L. Coote, and E. I. Izgorodina, 2021).
 
 The code in this repository references the MLCF code developed by Dick, Sebastian, and Marivi Fernandez-Serra in "Learning from the density to correct total energy and forces in first principle simulations." The Journal of Chemical Physics 151.14 (2019): 144102. See: https://github.com/semodi/mlcf to download and for a full list of requirements.
 

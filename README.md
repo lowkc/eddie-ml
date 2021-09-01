@@ -11,7 +11,7 @@ All structures are in the `data` folder. Codes can be found in the `model` folde
 
 ### Generate a deformation density
 ```
-python deformation_density.py xyzfile.xyz
+python get_deformation_density.py xyzfile.xyz
 ```
 
 ### Get coefficients from density cube files

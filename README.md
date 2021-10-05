@@ -19,3 +19,14 @@ Run the following code in a folder containing one or more .cube files. Basis set
 ```
 python get_dens_coeffs.py 
 ```
+### Run EDDIE trained on small neutral dimers
+To reproduce results from the neutral dimer dataset or predict for your own molecules, load the saved model:
+```
+import pickle
+
+with open('data/EDDIE_neutraldimer_model.pkl', 'rb') as f:
+    model = pickle.load(file)
+
+model.predict(X, y, atoms, atomtypes)
+```
+where ```atoms``` contains the number of atoms in the first dimer of X, and atom types is a list containing the elements of X. These can be accessed from ```get_atoms_and_atomtypes.py```.

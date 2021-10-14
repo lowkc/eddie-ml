@@ -378,7 +378,7 @@ class elemental_krr_model(BaseEstimator):
             print('Fitting model done [%dmin %dsec]' % (int(elapsed / 60), int(elapsed % 60)))
             
     
-    def predict(self, X_test, y_test, test_atoms, test_atomtypes, plot=True, variance=False):
+    def predict(self, X_test, y_test, test_atoms, test_atomtypes, plot=False, variance=False):
         y_ = np.empty(shape=(X_test.shape[0],))
         t = time.time()
         K = self.final_kernel.create(X_test, test_atoms, test_atomtypes, self.X_train, self.train_atoms,

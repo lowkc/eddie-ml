@@ -1,0 +1,1 @@
+This folder contains all the data used to train and test EDDIE models. All ```.xyz``` coordinate files are in the zipped folders. ```Database_SRSMP2.csv``` contains all the SRS-MP2/cc-pVTZ computed interaction energies for all dimers.

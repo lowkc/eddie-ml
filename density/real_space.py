@@ -12,7 +12,7 @@ from ase import Atoms
 from density import Density
 from ase.units import Bohr
 from geom import get_nncs_angles, get_elfcs_angles, get_casimir
-from geom import make_real, rotate_tensor, fold_back_coords
+from geom import make_real, rotate_tensor, fold_back_coords, power_spectrum, transform
 from elf import ElF
 from serial_view import serial_view
 
@@ -508,10 +508,12 @@ def orient_elf(i, elf, all_pos, mode):
         pass
     elif mode == 'casimir':
         pass
+    elif mode == 'power_spectrum':
+        pass
     else:
         raise Exception('Unknown!! orientation mode {}'.format(mode))
 
-    if (mode.lower() == 'neutral') or (mode == 'casimir'):
+    if (mode.lower() == 'neutral') or (mode == 'casimir') or (mode == 'power_spectrum'):
         angles = np.array([0,0,0])
     else:
         angles = angles_getter(i, fold_back_coords(i, all_pos, elf.unitcell), elf.value)
@@ -520,10 +522,17 @@ def orient_elf(i, elf, all_pos, mode):
         oriented = get_casimir(elf.value)
         oriented = np.asarray(list(oriented.values()))
         elf_oriented = ElF(oriented, angles, elf.basis, elf.species, elf.unitcell)
-    else:
+    elif mode == 'neutral':
         oriented = make_real(rotate_tensor(elf.value, np.array(angles), True))
         elf_oriented = ElF(oriented, angles, elf.basis, elf.species, elf.unitcell)
-    
+    else:
+        elf_transformed = transform(elf.value)
+        elf_transformed = np.stack([val for val in elf_transformed.values()]).reshape(-1)
+        n_l = elf.basis[f'n_l_{elf.species.lower()}']
+        n = elf.basis[f'n_rad_{elf.species.lower()}']
+        ps = power_spectrum(elf_transformed.reshape(1,-1), n_l-1, n, cgs=None)
+        oriented = ps.reshape(-1)
+        elf_oriented = ElF(oriented, angles, elf.basis, elf.species, elf.unitcell)
     return elf_oriented
 
 def orient_elfs(elfs, atoms, mode):

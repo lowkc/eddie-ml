@@ -1,5 +1,5 @@
 # Electron deformation density interaction energy machine learning (EDDIE-ML) code
-This repository contains the code needed to reproduce results in the paper, "Machine Learning the Dimer Interaction Energy as a Function of Electron Deformation Density" (K. Low, M. L. Coote, and E. I. Izgorodina, 2021).
+This repository contains the code needed to reproduce results in the paper, "Inclusion of more physics leads to less data: Learning the interaction energy as a function of electron deformation density with limited training data" (K. Low, M. L. Coote, and E. I. Izgorodina, 2021).
 
 The code in this repository references the MLCF code developed by Dick, Sebastian, and Marivi Fernandez-Serra in "Learning from the density to correct total energy and forces in first principle simulations." The Journal of Chemical Physics 151.14 (2019): 144102. See: https://github.com/semodi/mlcf to download and for a full list of requirements.
 

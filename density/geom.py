@@ -3,8 +3,8 @@ Code modified from: https://github.com/semodi/mlcf/blob/master/mlc_func/elf/geom
 """
 import numpy as np
 import spherical_functions as sf
-from sympy.physics.wigner import wigner_3j
 from sympy import N
+from sympy.physics.quantum.cg import CG
 
 # Transformation matrix between radial and euclidean (real) representation of
 # a rank-1 tensor
@@ -397,3 +397,125 @@ def fold_back_coords(i, coords, unitcell):
         return coords
     else:
         return fold_back_coords(i, coords, unitcell)
+
+def expand(*args):
+    """ Takes the common format in which datasets such as D and C are provided
+     (usually [{'species': np.ndarray}]) and loops over it
+     """
+    args = list(args)
+    for i, arg in enumerate(args):
+        if not isinstance(arg, list):
+            args[i] = [arg]
+
+    for idx, datasets in enumerate(zip(*args)):
+        for key in datasets[0]:
+            yield (idx, key, [data[key] for data in datasets])
+
+def casimir_symmetrise(c, n_l, n, *args):
+    c_shape = c.shape
+
+    c = c.reshape(-1, c_shape[-1])
+    casimirs = []
+    idx = 0
+    for n_ in range(0, n):
+        for l in range(n_l):
+            casimirs.append(np.linalg.norm(c[:, idx:idx + (2 * l + 1)], axis=1)**2)
+            idx += 2 * l + 1
+    casimirs = np.array(casimirs).T
+
+    return casimirs.reshape(*c_shape[:-1], -1)
+
+def transform(C):
+    """ Transforms from a dictionary format ({n,l,m} : value)
+        to an ordered np.ndarray format
+    """
+    transformed = [{}] * len(C)
+
+    for idx, key, data in expand(C):
+        data = data[0]
+        if not key in transformed[idx]:
+            transformed[idx][key] = []
+        transformed[idx][key].append(data)
+        transformed[idx][key] = np.array(transformed[idx][key])
+    if not isinstance(C, list):
+        return transformed[0]
+    else:
+        return transformed[0]
+
+def power_spectrum(c, n_l, n, cgs=None):
+    """ Returns the power spectrum of the tensors stored in c
+#
+#         Parameters:
+#         -----------
+#
+#         c: np.ndarray of floats/complex
+#             Stores the tensor elements in the order (n,l,m)
+#
+#         n_l: int
+#             number of angular momenta (not equal to maximum ang. momentum!
+#                 example: if only s-orbitals n_l would be 1)
+#
+#         n: int
+#             number of radial functions
+#
+#         cgs: np.ndarray, optional
+#             Clebsch-Gordan coefficients, if not provided, calculated on-the-fly
+#
+#         Returns
+#         -------
+#         np.ndarray
+#             Bispectrum
+#         """
+    casimirs = casimir_symmetrise(c, n_l, n)
+    c_shape = c.shape
+    c = c.reshape(len(c), n, -1)
+    bispectrum = []
+    idx = 0
+    start = {}
+    for l in range(0, n_l):
+        start[l] = idx
+        idx += 2*l + 1
+        
+    if not isinstance(cgs, np.ndarray):
+        cgs = cg_matrix(n_l)
+        
+    for n in range(0, n):
+        for l1 in range(n_l):
+            for l2 in range(n_l):
+                for l in range(abs(l2-l1),min(l1+l2+1, n_l)):
+                    b = 0
+                    if np.linalg.norm(cgs[l1,:,l2,:,l,:]) < 1e-15:
+                        continue
+                    
+                    for m in range(-l, l+1):
+                        for m1 in range(-l1, l1+1):
+                            for m2 in range(-l2,l2+1):
+                                     b += np.conj(c[:,n,start[l] + m + l])*\
+                                        c[:,n,start[l1] + m1 + l1]*\
+                                        c[:,n,start[l2] + m2 + l2]*\
+                                        cgs[l1,m1,l2,m2,l,m]
+                    if np.any(abs(b.imag) > 1e-3):
+                        raise Exception('Not real')
+                    bispectrum.append(b.real.round(5))
+    
+    bispectrum = np.array(bispectrum).T
+    bispectrum =  bispectrum.reshape(*c_shape[:-1], -1)
+    bispectrum = np.concatenate([casimirs, bispectrum], axis = -1)
+    return bispectrum
+
+
+def cg_matrix(n_l):
+    """ Returns the Clebsch-Gordan coefficients for maximum angular momentum n_l-1
+    """
+    lmax = n_l - 1
+    cgs = np.zeros([n_l, 2 * lmax + 1, n_l, 2 * lmax + 1, n_l, 2 * lmax + 1], dtype=complex)
+
+    for l in range(n_l):
+        for l1 in range(n_l):
+            for l2 in range(n_l):
+                for m in range(-n_l, n_l + 1):
+                    for m1 in range(-n_l, n_l + 1):
+                        for m2 in range(-n_l, n_l + 1):
+                            # cgs[l1,l2,l,m1,m2,m] = N(CG(l1,l2,l,m1,m2,m).doit())
+                            cgs[l1, m1, l2, m2, l, m] = N(CG(l1, m1, l2, m2, l, m).doit())
+    return cgs
